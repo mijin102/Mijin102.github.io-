@@ -1,0 +1,23 @@
+name: Update Data
+
+on:
+  workflow_dispatch:  # Permite que el workflow sea disparado manualmente desde la interfaz de GitHub
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update data
+        run: |
+          # Aquí puedes agregar comandos para actualizar el archivo data.json
+          echo '[{"firstName": "John", "lastName": "Doe", "id": "1", "startDate": "2024-01-01", "phone": "1234567890", "endDate": "2024-12-31"}]' > data.json
+
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: GitHub Actions
+          author_email: actions@github.com
+          message: 'Update data.json with new data'
