@@ -34,49 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function saveAccount(account) {
-        try {
-            const response = await fetch('https://tu-backend.com/api/accounts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(account)
-            });
-            if (!response.ok) {
-                throw new Error('Error al guardar la cuenta');
-            }
-            const data = await response.json();
-            console.log('Cuenta guardada:', data);
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        // Aquí se debería implementar una manera de actualizar el archivo data.json en GitHub
+        console.log('Guardar datos no implementado en esta demostración');
     }
 
     async function updateAccount(id, updatedAccount) {
-        try {
-            const response = await fetch(`https://tu-backend.com/api/accounts/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedAccount)
-            });
-            if (!response.ok) {
-                throw new Error('Error al actualizar la cuenta');
-            }
-            const data = await response.json();
-            console.log('Cuenta actualizada:', data);
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        // Aquí se debería implementar una manera de actualizar el archivo data.json en GitHub
+        console.log('Actualizar datos no implementado en esta demostración');
     }
 
     async function displayAccounts() {
         tableBody.innerHTML = '';
         try {
-            const response = await fetch('https://tu-backend.com/api/accounts');
+            const response = await fetch('https://raw.githubusercontent.com/TU_USUARIO/TU_REPOSITORIO/main/data.json');
             if (!response.ok) {
-                throw new Error('Error al obtener cuentas');
+                throw new Error('Error al obtener datos');
             }
             const accounts = await response.json();
             accounts.forEach((account) => {
@@ -107,9 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkExpiryDates() {
-        // Si decides mantener el chequeo de fechas en el frontend
-        // puedes consultar los datos almacenados en el backend
-        // en lugar de localStorage
+        // Opcional: Implementar cheques de fechas si necesario
     }
 
     displayAccounts();
