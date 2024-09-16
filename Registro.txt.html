@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de cuentas de Streaming</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>REGISTRO DE CUENTAS DE STREAMING</h1>
+    <form id="registration-form">
+        <label for="firstName">Nombre:</label>
+        <input type="text" id="firstName" required>
+        <label for="lastName">Apellido:</label>
+        <input type="text" id="lastName" required>
+        <label for="id">ID:</label>
+        <input type="text" id="id" required>
+        <label for="startDate">Fecha de Inicio:</label>
+        <input type="date" id="startDate" required>
+        <label for="phone">Teléfono:</label>
+        <input type="text" id="phone" required>
+        <label for="endDate">Fecha de Finalización:</label>
+        <input type="date" id="endDate" required>
+        <button type="submit">Guardar</button>
+    </form>
+    <h2>Lista de Cuentas</h2>
+    <table id="accounts-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>ID</th>
+                <th>Fecha de Inicio</th>
+                <th>Teléfono</th>
+                <th>Fecha de Finalización</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Las filas se añadirán aquí con JavaScript -->
+        </tbody>
+    </table>
+    <script src="script.js"></script>
+</body>
+</html>
