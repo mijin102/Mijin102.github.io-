@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableBody = document.getElementById('accounts-table').getElementsByTagName('tbody')[0];
     let editId = null;
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
         const firstName = document.getElementById('firstName').value;
@@ -23,65 +23,93 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         if (editId) {
-            updateAccount(editId, account);
+            await updateAccount(editId, account);
             editId = null;
         } else {
-            saveAccount(account);
+            await saveAccount(account);
         }
 
         displayAccounts();
         form.reset();
     });
 
-    function saveAccount(account) {
-        let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-        accounts.push(account);
-        localStorage.setItem('accounts', JSON.stringify(accounts));
-    }
-
-    function updateAccount(id, updatedAccount) {
-        let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-        accounts = accounts.map(account => account.id === id ? updatedAccount : account);
-        localStorage.setItem('accounts', JSON.stringify(accounts));
-    }
-
-    function displayAccounts() {
-        tableBody.innerHTML = '';
-        let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-        accounts.forEach((account) => {
-            const row = tableBody.insertRow();
-            row.insertCell(0).textContent = account.firstName;
-            row.insertCell(1).textContent = account.lastName;
-            row.insertCell(2).textContent = account.id;
-            row.insertCell(3).textContent = account.startDate;
-            row.insertCell(4).textContent = account.phone;
-            row.insertCell(5).textContent = account.endDate;
-
-            const editCell = row.insertCell(6);
-            editCell.innerHTML = '<span class="edit-icon">✎</span>';
-            editCell.addEventListener('click', () => {
-                document.getElementById('firstName').value = account.firstName;
-                document.getElementById('lastName').value = account.lastName;
-                document.getElementById('id').value = account.id;
-                document.getElementById('startDate').value = account.startDate;
-                document.getElementById('phone').value = account.phone;
-                document.getElementById('endDate').value = account.endDate;
-                editId = account.id;
+    async function saveAccount(account) {
+        try {
+            const response = await fetch('https://tu-backend.com/api/accounts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(account)
             });
-        });
-        checkExpiryDates();
+            if (!response.ok) {
+                throw new Error('Error al guardar la cuenta');
+            }
+            const data = await response.json();
+            console.log('Cuenta guardada:', data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function updateAccount(id, updatedAccount) {
+        try {
+            const response = await fetch(`https://tu-backend.com/api/accounts/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedAccount)
+            });
+            if (!response.ok) {
+                throw new Error('Error al actualizar la cuenta');
+            }
+            const data = await response.json();
+            console.log('Cuenta actualizada:', data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function displayAccounts() {
+        tableBody.innerHTML = '';
+        try {
+            const response = await fetch('https://tu-backend.com/api/accounts');
+            if (!response.ok) {
+                throw new Error('Error al obtener cuentas');
+            }
+            const accounts = await response.json();
+            accounts.forEach((account) => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = account.firstName;
+                row.insertCell(1).textContent = account.lastName;
+                row.insertCell(2).textContent = account.id;
+                row.insertCell(3).textContent = account.startDate;
+                row.insertCell(4).textContent = account.phone;
+                row.insertCell(5).textContent = account.endDate;
+
+                const editCell = row.insertCell(6);
+                editCell.innerHTML = '<span class="edit-icon">✎</span>';
+                editCell.addEventListener('click', () => {
+                    document.getElementById('firstName').value = account.firstName;
+                    document.getElementById('lastName').value = account.lastName;
+                    document.getElementById('id').value = account.id;
+                    document.getElementById('startDate').value = account.startDate;
+                    document.getElementById('phone').value = account.phone;
+                    document.getElementById('endDate').value = account.endDate;
+                    editId = account.id;
+                });
+            });
+            checkExpiryDates();
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
     function checkExpiryDates() {
-        const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-        const today = new Date();
-        accounts.forEach((account) => {
-            const endDate = new Date(account.endDate);
-            const daysLeft = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
-            if (daysLeft <= 3 && daysLeft >= 0) {
-                alert(`La cuenta con ID ${account.id} expira en ${daysLeft} días.`);
-            }
-        });
+        // Si decides mantener el chequeo de fechas en el frontend
+        // puedes consultar los datos almacenados en el backend
+        // en lugar de localStorage
     }
 
     displayAccounts();
